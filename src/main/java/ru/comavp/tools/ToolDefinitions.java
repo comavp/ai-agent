@@ -5,10 +5,10 @@ import chat.giga.model.completion.ChatFunctionParameters;
 import java.util.Map;
 import java.util.function.Function;
 
-import static ru.comavp.tools.ToolSchemaUtils.getListFilesParameters;
+import static ru.comavp.tools.ToolSchemaUtils.*;
+import static ru.comavp.tools.functions.EditFileTool.getEditFileTool;
 import static ru.comavp.tools.functions.ListFilesTool.getListFilesTool;
 import static ru.comavp.tools.functions.ReadFileTool.getReadFileTool;
-import static ru.comavp.tools.ToolSchemaUtils.getReadFileParameters;
 
 public enum ToolDefinitions {
 
@@ -17,12 +17,21 @@ public enum ToolDefinitions {
             "Прочитай содержимое файла по заданному относительному пути. Используй это, когда хочешь посмотреть, " +
                     "что находится внутри файла. Не используй это с именами каталогов.",
             getReadFileParameters(),
-            getReadFileTool()),
+            getReadFileTool()
+    ),
     LIST_FILES_DEFINITION(
             "list_files",
             "Выводит список файлов и директорий по указанному пути. Если путь не указан, выводит файлы в текущей директории.",
             getListFilesParameters(),
             getListFilesTool()
+    ),
+    EDIT_FILE_DEFINITION(
+            "edit_file",
+            "Редактирует текстовый файл. Заменяет 'old_str' на 'new_str' в указанном файле. " +
+                    "'old_str' и 'new_str' ДОЛЖНЫ отличаться друг от друга. " +
+                    "Если файл не существует, он будет создан.",
+            getEditFileParameters(),
+            getEditFileTool()
     );
 
     private final ToolDefinition value;
