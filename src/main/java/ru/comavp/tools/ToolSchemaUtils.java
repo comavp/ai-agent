@@ -11,11 +11,22 @@ public final class ToolSchemaUtils {
 
     public static ChatFunctionParameters getReadFileParameters() {
         return ChatFunctionParameters.builder()
+                .type("object")
                 .property("path", ChatFunctionParametersProperty.builder()
                         .type("string")
                         .description("Относительный путь файла в рабочем каталоге.")
                         .build())
                 .required(List.of("path"))
+                .build();
+    }
+
+    public static ChatFunctionParameters getListFilesParameters() {
+        return ChatFunctionParameters.builder()
+                .type("object")
+                .property("path", ChatFunctionParametersProperty.builder()
+                        .type("string")
+                        .description("Опциональный относительный путь для списка файлов. По умолчанию текущая директория")
+                        .build())
                 .build();
     }
 }
