@@ -22,7 +22,7 @@ public class GigaChatProperties {
 
     private Properties getProperties() {
         Properties properties = new Properties();
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("src/main/resources/application.properties")) {
             properties.load(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
