@@ -6,7 +6,6 @@ import chat.giga.model.ModelName;
 import chat.giga.model.completion.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import ru.comavp.tools.ToolDefinitions;
