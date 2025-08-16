@@ -1,4 +1,4 @@
-package ru.comavp;
+package ru.comavp.email;
 
 import lombok.Getter;
 import org.apache.commons.text.StringSubstitutor;
@@ -14,6 +14,7 @@ public class EmailPropertiesLoader {
     private Properties properties;
     private String userName;
     private String password;
+    private String recipient;
 
     public EmailPropertiesLoader() {
         loadProperties();
@@ -31,7 +32,9 @@ public class EmailPropertiesLoader {
 
         userName = interpolator.replace(properties.getProperty("username"));
         password = interpolator.replace(properties.getProperty("password"));
+        recipient = interpolator.replace(properties.getProperty("recipient"));
         properties.remove("username");
         properties.remove("password");
+        properties.remove("recipient");
     }
 }

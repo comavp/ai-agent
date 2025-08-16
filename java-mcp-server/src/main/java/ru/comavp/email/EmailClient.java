@@ -1,4 +1,4 @@
-package ru.comavp;
+package ru.comavp.email;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
@@ -10,6 +10,7 @@ public class EmailClient {
 
     private Session session;
     private String emailAddress;
+    private String recipient;
 
     private static String CONTENT_TYPE = "text/html; charset=utf-8";
 
@@ -22,9 +23,10 @@ public class EmailClient {
             }
         });
         emailAddress = propertiesLoader.getUserName() + "@yandex.ru";
+        recipient = propertiesLoader.getRecipient();
     }
 
-    public void sendEmail(String recipient, String content) {
+    public void sendEmail(String content) {
         try {
             Transport.send(buildMessage(recipient, content));
         } catch (MessagingException e) {
