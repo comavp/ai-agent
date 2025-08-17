@@ -21,9 +21,10 @@ public class McpServerRunner {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        finally {
-            mcpServer.close();
-        }
+    }
+
+    public void close() {
+        mcpServer.close();
     }
 
     private McpSyncServer buildMcpServer() {
