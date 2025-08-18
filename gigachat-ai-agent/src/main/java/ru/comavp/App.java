@@ -4,6 +4,7 @@ import chat.giga.client.GigaChatClient;
 import chat.giga.client.auth.AuthClient;
 import chat.giga.client.auth.AuthClientBuilder;
 import chat.giga.model.Scope;
+import ru.comavp.mcp.McpClientRunner;
 
 import java.util.Scanner;
 import java.util.function.Supplier;
@@ -31,7 +32,7 @@ public class App {
             }
         };
 
-        Agent agent = new Agent(client, userMessage);
+        Agent agent = new Agent(client, new McpClientRunner(), userMessage);
         agent.run();
     }
 }
