@@ -15,6 +15,7 @@ import ru.comavp.tools.ToolDefinitions;
 import ru.comavp.tools.model.ToolResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -87,7 +88,7 @@ public class Agent {
                        McpSchema.CallToolRequest::name,
                        callToolRequest -> McpToolDefinition.builder()
                                .name(callToolRequest.name())
-                               .function(t -> mcpClient.executeTool(callToolRequest))
+                               .function(mcpClient::executeTool)
                                .build()
                ));
     }
@@ -126,7 +127,7 @@ public class Agent {
                 System.out.printf("\u001b[91mError executing tool\u001b[0m: %s%n", e.getMessage());
                 return ToolResult.error("Error: " + e.getMessage());
             }
-        } /*else if (mcpFunctions.containsKey(toolName)) {
+        } else if (mcpFunctions.containsKey(toolName)) {
             var mcpToolDefinition = mcpFunctions.get(toolName);
             var mcpToolCaller = mcpToolDefinition.getFunction();
             try {
@@ -136,7 +137,7 @@ public class Agent {
                 System.out.printf("\u001b[91mError executing tool\u001b[0m: %s%n", e.getMessage());
                 return ToolResult.error("Error: " + e.getMessage());
             }
-        }*/ else {
+        } else {
             System.out.printf("\u001b[91mError\u001b[0m: Tool '%s' not found%n", toolName);
             return ToolResult.error("Функция не найдена");
         }
