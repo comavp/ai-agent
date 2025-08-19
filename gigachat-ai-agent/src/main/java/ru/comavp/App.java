@@ -32,7 +32,9 @@ public class App {
             }
         };
 
-        Agent agent = new Agent(client, new McpClientRunner(), userMessage);
+        Agent agent = new Agent(client,
+                new McpClientRunner(properties.getUserName(), properties.getPassword(), properties.getRecipient()),
+                userMessage);
         agent.run();
     }
 }

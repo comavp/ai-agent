@@ -15,9 +15,16 @@ public class GigaChatProperties {
 
     private String authKey;
 
+    private String userName;
+    private String password;
+    private String recipient;
+
     public GigaChatProperties() {
         Properties properties = getProperties();
         authKey = properties.getProperty("authkey");
+        userName = properties.getProperty("username");
+        password = properties.getProperty("password");
+        recipient = properties.getProperty("recipient");
     }
 
     private Properties getProperties() {
