@@ -49,4 +49,22 @@ public final class McpServerUtils {
 
         return request;
     }
+
+    public static ObjectNode createCallToolRequest() {
+        ObjectNode request = mapper.createObjectNode();
+        request.put("jsonrpc", "2.0");
+        request.put("id", 0);
+        request.put("method", "tools/call");
+
+        ObjectNode params = mapper.createObjectNode();
+        params.put("name", "mail-sender");
+
+        ObjectNode arguments = mapper.createObjectNode();
+        params.put("content", "Test email");
+
+        params.set("arguments", arguments);
+        request.set("params", params);
+
+        return request;
+    }
 }

@@ -7,6 +7,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import ru.comavp.email.EmailClient;
 
 import java.io.*;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.comavp.McpServerUtils.*;
 
+@ExtendWith(MockitoExtension.class)
 public class McpServerTest {
 
     private McpServerRunner mcpServerRunner;
@@ -31,6 +36,9 @@ public class McpServerTest {
     private PipedOutputStream outputPipeOut;
     private BufferedReader outputReader;
     private PrintStream originalSystemOut;
+
+    @Mock
+    private EmailClient emailClient;
 
     @BeforeEach
     public void init() throws IOException {
@@ -48,7 +56,7 @@ public class McpServerTest {
         outputReader = new BufferedReader(new InputStreamReader(outputPipe));
         System.setOut(new PrintStream(outputPipeOut, true));
 
-        mcpServerRunner = new McpServerRunner();
+        mcpServerRunner = new McpServerRunner(emailClient);
         startServer();
     }
 
@@ -125,10 +133,28 @@ public class McpServerTest {
         assertEquals("string", content.get("type").asText());
     }
 
-//    @Test
-//    public void testCallToolRequest() {
-//        String request = "{\"method\":\"tools/call\",\"params\":{\"name\":\"mail-sender\",\"arguments\":{\"content\":\"Привет из Claude AI\"}},\"jsonrpc\":\"2.0\",\"id\":16}";
-//    }
+    @Test
+    public void testCallToolRequest() throws IOException {
+        sendRequest(createInitializedRequest());
+        var response = sendRequestAndWaitForResponse(createCallToolRequest());
+
+        assertNotNull(response, "Server should respond to initialize request");
+        assertEquals("2.0", response.get("jsonrpc").asText());
+        assertEquals(0, response.get("id").asInt());
+
+        JsonNode result = response.get("result");
+        assertNotNull(result, "Response should contain result");
+        assertFalse(result.get("isError").asBoolean());
+        assertNotNull(result.get("content"), "Result should contain content");
+
+        JsonNode content = result.get("content");
+        assertEquals(1, content.size());
+
+        JsonNode contentItem = content.get(0);
+        assertEquals(2, contentItem.size());
+        assertEquals("text", contentItem.get("type").asText());
+        assertEquals("Письмо успешно отправлено", contentItem.get("text").asText());
+    }
 
     private void startServer() {
         executor.submit(() -> mcpServerRunner.run());

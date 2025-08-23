@@ -13,9 +13,15 @@ public class McpServerRunner {
     private EmailClient emailClient;
     private McpSyncServer mcpServer;
 
-    public void run() {
+    public McpServerRunner() {
         emailClient = new EmailClient();
+    }
 
+    public McpServerRunner(EmailClient emailClient) {
+        this.emailClient = emailClient;
+    }
+
+    public void run() {
         try {
             mcpServer = buildMcpServer();
         } catch (Exception e) {
