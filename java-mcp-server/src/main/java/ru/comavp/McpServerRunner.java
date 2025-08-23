@@ -32,7 +32,7 @@ public class McpServerRunner {
                 .serverInfo("java-mcp-server", "1.0.0")
                 .capabilities(McpSchema.ServerCapabilities.builder()
                         .resources(false, false)
-                        .tools(true)
+                        .tools(false)
                         .prompts(false)
                         .build())
                 .build();
