@@ -28,4 +28,25 @@ public final class McpServerUtils {
 
         return request;
     }
+
+    public static ObjectNode createInitializedRequest() {
+        ObjectNode request = mapper.createObjectNode();
+        request.put("jsonrpc", "2.0");
+        request.put("method", "notifications/initialized");
+
+        return request;
+    }
+
+    public static ObjectNode createListToolsRequest() {
+        ObjectNode request = mapper.createObjectNode();
+        request.put("jsonrpc", "2.0");
+        request.put("id", 0);
+        request.put("method", "tools/list");
+
+        ObjectNode params = mapper.createObjectNode();
+
+        request.set("params", params);
+
+        return request;
+    }
 }

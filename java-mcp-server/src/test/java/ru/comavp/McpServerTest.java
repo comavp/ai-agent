@@ -1,5 +1,6 @@
 package ru.comavp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,7 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.comavp.McpServerUtils.createInitializeRequest;
+import static ru.comavp.McpServerUtils.*;
 
 public class McpServerTest {
 
@@ -91,6 +92,44 @@ public class McpServerTest {
         assertEquals("1.0.0", serverInfo.get("version").asText());
     }
 
+    @Test
+    public void testListToolsRequest() throws IOException {
+        sendRequest(createInitializedRequest());
+        var response = sendRequestAndWaitForResponse(createListToolsRequest());
+
+        assertNotNull(response, "Server should respond to initialize request");
+        assertEquals("2.0", response.get("jsonrpc").asText());
+        assertEquals(0, response.get("id").asInt());
+
+        JsonNode result = response.get("result");
+        assertNotNull(result, "Response should contain result");
+        assertNotNull(result.get("tools"), "Result should contain tools");
+
+        JsonNode tools = result.get("tools");
+        assertEquals(1, tools.size());
+
+        JsonNode tool = tools.get(0);
+        assertEquals("mail-sender", tool.get("name").asText());
+        assertEquals("Tool for sending emails", tool.get("description").asText());
+        assertNotNull(tool.get("inputSchema"));
+
+        JsonNode inputSchema = tool.get("inputSchema");
+        assertEquals("object", inputSchema.get("type").asText());
+        assertNotNull(inputSchema.get("properties"));
+
+        JsonNode properties = inputSchema.get("properties");
+        assertEquals(1, properties.size());
+        assertNotNull(properties.get("content"));
+
+        JsonNode content = properties.get("content");
+        assertEquals("string", content.get("type").asText());
+    }
+
+//    @Test
+//    public void testCallToolRequest() {
+//        String request = "{\"method\":\"tools/call\",\"params\":{\"name\":\"mail-sender\",\"arguments\":{\"content\":\"Привет из Claude AI\"}},\"jsonrpc\":\"2.0\",\"id\":16}";
+//    }
+
     private void startServer() {
         executor.submit(() -> mcpServerRunner.run());
     }
@@ -99,10 +138,13 @@ public class McpServerTest {
         mcpServerRunner.close();
     }
 
-    private JsonNode sendRequestAndWaitForResponse(ObjectNode request) throws IOException {
+    private void sendRequest(ObjectNode request) throws JsonProcessingException {
         writer.println(mapper.writeValueAsString(request));
         writer.flush();
+    }
 
+    private JsonNode sendRequestAndWaitForResponse(ObjectNode request) throws IOException {
+        sendRequest(request);
         String mcpServerResponse = outputReader.readLine();
         return mapper.readTree(mcpServerResponse);
     }
