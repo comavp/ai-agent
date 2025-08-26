@@ -16,6 +16,7 @@
   <modules>
     <module>java-mcp-server</module>
     <module>gigachat-ai-agent</module>
+      <module>deepseek-ai-agent</module>
   </modules>
 
 </project>
