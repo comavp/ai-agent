@@ -82,28 +82,26 @@ public class Agent {
                     .maxCompletionTokens(1024)
                     .tools(functions)
                     .messages(dialog.stream()
-                            .map(item -> {
-                                var obj = switch(Objects.requireNonNull(item._role().convert(String.class))) {
-                                    case "user" -> ChatCompletionMessageParam.ofUser(ChatCompletionUserMessageParam.builder()
-                                            .content(item.content().get())
-                                            .build());
-                                    case "assistant" -> ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
-                                            .content(item.content().get())
-                                            //.toolCalls(item.toolCalls().get())
-                                            .build());
-                                    case "tool" -> ChatCompletionMessageParam.ofTool(ChatCompletionToolMessageParam.builder()
-                                            .content(item.content().get())
-                                            .toolCallId(item.toolCalls().get().get(0).asFunction().id())
-                                            .build());
-                                    default -> throw new RuntimeException("Unknown user role");
-                                };
-                                if (obj.isAssistant() && item.toolCalls().isPresent()) {
-                                    return ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
-                                            .content(item.content().get())
-                                            .toolCalls(item.toolCalls().get())
-                                            .build());
-                                }
-                                return obj;
+                            .map(item -> switch (Objects.requireNonNull(item._role().convert(String.class))) {
+                                case "user" ->
+                                        ChatCompletionMessageParam.ofUser(ChatCompletionUserMessageParam.builder()
+                                                .content(item.content().get())
+                                                .build());
+                                case "assistant" -> item.toolCalls()
+                                        .map(toolCalls -> ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
+                                                .content(item.content().get())
+                                                .toolCalls(item.toolCalls().get())
+                                                .build()))
+                                        .orElse(ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
+                                                .content(item.content().get())
+                                                .toolCalls(item.toolCalls().get())
+                                                .build()));
+                                case "tool" ->
+                                        ChatCompletionMessageParam.ofTool(ChatCompletionToolMessageParam.builder()
+                                                .content(item.content().get())
+                                                .toolCallId(item.toolCalls().get().get(0).asFunction().id())
+                                                .build());
+                                default -> throw new RuntimeException("Unknown user role");
                             })
                             .toList())
                     .build());
