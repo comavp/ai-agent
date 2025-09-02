@@ -2,6 +2,7 @@ package ru.comavp;
 
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
+import ru.comavp.mcp.McpClientRunner;
 
 import java.util.Scanner;
 import java.util.function.Supplier;
@@ -25,7 +26,9 @@ public class App {
             }
         };
 
-        Agent agent = new Agent(client, userMessage);
+        Agent agent = new Agent(client,
+                new McpClientRunner(properties.getUserName(), properties.getPassword(), properties.getRecipient()),
+                userMessage);
         agent.run();
     }
 }
