@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -70,6 +71,7 @@ public class McpServerTest {
     }
 
     @Test
+    @Timeout(value = 5, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     public void testInitRequest() throws IOException {
         var response = sendRequestAndWaitForResponse(createInitializeRequest());
 
@@ -101,6 +103,7 @@ public class McpServerTest {
     }
 
     @Test
+    @Timeout(value = 5, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     public void testListToolsRequest() throws IOException {
         sendRequest(createInitializedRequest());
         var response = sendRequestAndWaitForResponse(createListToolsRequest());
@@ -134,6 +137,7 @@ public class McpServerTest {
     }
 
     @Test
+    @Timeout(value = 5, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     public void testCallToolRequest() throws IOException {
         sendRequest(createInitializedRequest());
         var response = sendRequestAndWaitForResponse(createCallToolRequest());
