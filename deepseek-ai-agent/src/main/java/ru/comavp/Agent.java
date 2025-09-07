@@ -209,11 +209,12 @@ public class Agent {
                 .putAdditionalProperty("properties", JsonValue.from(jsonSchema.properties()))
                 .putAdditionalProperty("required", JsonValue.from(Objects.isNull(jsonSchema.required())
                         ? new ArrayList<>() : jsonSchema.required()))
-                /*todo throws com.openai.errors.BadRequestException: 400: Invalid schema for function 'mail-sender': null is not of types "boolean", "object"
-                .putAdditionalProperty("additionalProperties", JsonValue.from(jsonSchema.additionalProperties()))
-                .putAdditionalProperty("$defs", JsonValue.from(jsonSchema.defs()))
-                .putAdditionalProperty("definitions", JsonValue.from(jsonSchema.definitions()))
-                */
+                .putAdditionalProperty("additionalProperties", JsonValue.from(
+                        Objects.nonNull(jsonSchema.additionalProperties()) ? jsonSchema.additionalProperties() : false))
+                .putAdditionalProperty("$defs", JsonValue.from(
+                        Objects.nonNull(jsonSchema.defs()) ? jsonSchema.defs() : Map.of()))
+                .putAdditionalProperty("definitions", JsonValue.from(
+                        Objects.nonNull(jsonSchema.definitions()) ? jsonSchema.definitions() : Map.of()))
                 .build();
     }
 }
