@@ -8,9 +8,9 @@ import ru.comavp.tools.model.ToolResult;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class UnifiedToolManager {
+
     private final Map<String, UnifiedToolDefinition> tools;
 
     public UnifiedToolManager(McpClientRunner mcpClient) {

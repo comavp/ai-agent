@@ -6,6 +6,7 @@ import ru.comavp.tools.model.ToolResult;
 import java.util.Map;
 
 public interface UnifiedToolDefinition {
+
     String getName();
     String getDescription();
     ChatFunction toChatFunction();

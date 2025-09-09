@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class McpToolAdapter implements UnifiedToolDefinition {
+
     private final McpSchema.Tool mcpTool;
     private final Function<McpSchema.CallToolRequest, McpSchema.CallToolResult> executor;
 

@@ -6,6 +6,7 @@ import ru.comavp.tools.model.ToolResult;
 import java.util.Map;
 
 public class LocalToolAdapter implements UnifiedToolDefinition {
+
     private final ToolDefinition toolDefinition;
 
     public LocalToolAdapter(ToolDefinition toolDefinition) {
