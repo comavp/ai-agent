@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Claude Code
+ */
 public class UnifiedToolManager {
 
     private final Map<String, UnifiedToolDefinition> tools;

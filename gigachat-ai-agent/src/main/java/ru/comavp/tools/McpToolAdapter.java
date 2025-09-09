@@ -9,6 +9,9 @@ import ru.comavp.tools.model.ToolResult;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * @author Claude Code
+ */
 public class McpToolAdapter implements UnifiedToolDefinition {
 
     private final McpSchema.Tool mcpTool;
