@@ -1,0 +1,36 @@
+# Claude Code Configuration
+
+## Git Commit Guidelines
+
+When creating git commits, follow these rules:
+
+### Commit Message Format
+- Use only a single line commit message 
+- Include `[claude-code]` prefix to indicate code was written with Claude Code assistance
+- Keep the message concise and descriptive
+- Do NOT include additional lines, footers, or co-author information
+
+### Examples
+```
+[claude-code] Fix code style issues
+[claude-code] Add unified tool management system
+[claude-code] Implement MCP tool adapter pattern
+```
+
+## Pull Request Guidelines
+
+When creating pull requests, follow these rules:
+
+### PR Description Format
+- Use only a `## Summary` section in the description
+- List changes as bullet points using dash (`-`) format
+- Keep descriptions concise and focused on what was changed
+- Do NOT include `## Test plan`, `🤖 Generated with`, or other additional sections
+- Do NOT include co-author information or footers
+
+### Examples
+```
+## Summary
+- Add .claude_code_config with commit message guidelines for Claude Code
+- Add CLAUDE.md with comprehensive project structure and development commands documentation
+```
