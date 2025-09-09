@@ -1,0 +1,18 @@
+# Claude Code Configuration
+
+## Git Commit Guidelines
+
+When creating git commits, follow these rules:
+
+### Commit Message Format
+- Use only a single line commit message 
+- Include `[claude-code]` prefix to indicate code was written with Claude Code assistance
+- Keep the message concise and descriptive
+- Do NOT include additional lines, footers, or co-author information
+
+### Examples
+```
+[claude-code] Fix code style issues
+[claude-code] Add unified tool management system
+[claude-code] Implement MCP tool adapter pattern
+```
