@@ -55,4 +55,8 @@ public enum ToolDefinitions {
     public Function<JsonValue, String> getFunction() {
         return value.getFunction();
     }
+
+    public ToolDefinition getToolDefinition() {
+        return value;
+    }
 }
