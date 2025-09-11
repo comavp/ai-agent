@@ -1,6 +1,7 @@
-package ru.comavp.tools;
+package ru.comavp.tools.adapters;
 
 import chat.giga.model.completion.ChatFunction;
+import ru.comavp.tools.ToolDefinition;
 import ru.comavp.tools.model.ToolResult;
 
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * @author Claude Code
  */
-public class LocalToolAdapter implements UnifiedToolDefinition {
+public class LocalToolAdapter implements ToolAdapter {
 
     private final ToolDefinition toolDefinition;
 

@@ -3,6 +3,9 @@ package ru.comavp.tools;
 import chat.giga.model.completion.ChatFunction;
 import io.modelcontextprotocol.spec.McpSchema;
 import ru.comavp.mcp.McpClientRunner;
+import ru.comavp.tools.adapters.LocalToolAdapter;
+import ru.comavp.tools.adapters.McpToolAdapter;
+import ru.comavp.tools.adapters.ToolAdapter;
 import ru.comavp.tools.model.ToolResult;
 
 import java.util.HashMap;
@@ -12,11 +15,11 @@ import java.util.Map;
 /**
  * @author Claude Code
  */
-public class UnifiedToolManager {
+public class ToolManager {
 
-    private final Map<String, UnifiedToolDefinition> tools;
+    private final Map<String, ToolAdapter> tools;
 
-    public UnifiedToolManager(McpClientRunner mcpClient) {
+    public ToolManager(McpClientRunner mcpClient) {
         this.tools = new HashMap<>();
         loadLocalTools();
         loadMcpTools(mcpClient);
@@ -24,7 +27,7 @@ public class UnifiedToolManager {
 
     private void loadLocalTools() {
         for (ToolDefinitions toolDefinition : ToolDefinitions.values()) {
-            UnifiedToolDefinition adapter = new LocalToolAdapter(toolDefinition.getToolDefinition());
+            ToolAdapter adapter = new LocalToolAdapter(toolDefinition.getToolDefinition());
             tools.put(adapter.getName(), adapter);
         }
     }
@@ -32,7 +35,7 @@ public class UnifiedToolManager {
     private void loadMcpTools(McpClientRunner mcpClient) {
         McpSchema.ListToolsResult mcpToolsResult = mcpClient.getToolsList();
         for (McpSchema.Tool mcpTool : mcpToolsResult.tools()) {
-            UnifiedToolDefinition adapter = new McpToolAdapter(mcpTool, mcpClient::executeTool);
+            ToolAdapter adapter = new McpToolAdapter(mcpTool, mcpClient::executeTool);
             tools.put(adapter.getName(), adapter);
         }
     }
@@ -40,12 +43,12 @@ public class UnifiedToolManager {
     public List<ChatFunction> getAllChatFunctions() {
         return tools.values()
                 .stream()
-                .map(UnifiedToolDefinition::toChatFunction)
+                .map(ToolAdapter::toChatFunction)
                 .toList();
     }
 
     public ToolResult executeTool(String toolName, Map<String, Object> arguments) {
-        UnifiedToolDefinition tool = tools.get(toolName);
+        ToolAdapter tool = tools.get(toolName);
         if (tool == null) {
             return ToolResult.error("Функция не найдена");
         }

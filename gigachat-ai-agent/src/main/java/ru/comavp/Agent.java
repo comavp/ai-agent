@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import ru.comavp.mcp.McpClientRunner;
-import ru.comavp.tools.UnifiedToolManager;
+import ru.comavp.tools.ToolManager;
 import ru.comavp.tools.model.ToolResult;
 
 import java.util.ArrayList;
@@ -25,10 +25,10 @@ public class Agent {
     private final Supplier<String> userMessage;
 
     private ObjectMapper mapper = new ObjectMapper();
-    private UnifiedToolManager toolManager;
+    private ToolManager toolManager;
 
     public void run() {
-        toolManager = new UnifiedToolManager(mcpClient);
+        toolManager = new ToolManager(mcpClient);
         List<ChatMessage> dialog = new ArrayList<>();
         System.out.println("Chat with GigaChat (use 'ctrl-c' to quit)");
         boolean readUserInput = true;

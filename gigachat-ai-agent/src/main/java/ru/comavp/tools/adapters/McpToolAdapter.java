@@ -1,4 +1,4 @@
-package ru.comavp.tools;
+package ru.comavp.tools.adapters;
 
 import chat.giga.model.completion.ChatFunction;
 import chat.giga.model.completion.ChatFunctionParameters;
@@ -12,7 +12,7 @@ import java.util.function.Function;
 /**
  * @author Claude Code
  */
-public class McpToolAdapter implements UnifiedToolDefinition {
+public class McpToolAdapter implements ToolAdapter {
 
     private final McpSchema.Tool mcpTool;
     private final Function<McpSchema.CallToolRequest, McpSchema.CallToolResult> executor;
