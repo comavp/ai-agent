@@ -55,4 +55,8 @@ public enum ToolDefinitions {
     public Function<Map<String, Object>, String> getFunction() {
         return value.getFunction();
     }
+
+    public ToolDefinition getToolDefinition() {
+        return value;
+    }
 }
