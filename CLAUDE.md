@@ -106,6 +106,16 @@ Project uses Java 19 with Maven compiler source/target set accordingly.
 - Lombok for code generation
 - JUnit 5 and Mockito for testing (MCP server only)
 
+## Code Style Guidelines
+
+### File Headers
+When creating new Java files, always add an author comment indicating Claude Code as the creator:
+```java
+/**
+ * @author Claude Code
+ */
+```
+
 ## Git Commit Guidelines
 
 ### Commit Message Format
