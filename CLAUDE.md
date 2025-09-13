@@ -105,3 +105,28 @@ Project uses Java 19 with Maven compiler source/target set accordingly.
 - Apache Commons for utilities
 - Lombok for code generation
 - JUnit 5 and Mockito for testing (MCP server only)
+
+## Git Commit Guidelines
+
+### Commit Message Format
+- Use single line only with `[claude-code]` prefix
+- Be concise and descriptive
+- No additional lines, footers, or co-author information
+- Examples:
+  - `[claude-code] Fix code style issues`
+  - `[claude-code] Add unified tool management system`
+  - `[claude-code] Implement MCP tool adapter pattern`
+
+## Pull Request Guidelines
+
+### Description Format
+- Include only a Summary section
+- Use bullet points with dashes
+- Focus on concise, focused changes
+- No test plan, generated footer, or co-author information
+- Example format:
+  ```
+  ## Summary
+  - Add .claude_code_config with commit message guidelines for Claude Code
+  - Add CLAUDE.md with comprehensive project structure and development commands documentation
+  ```
