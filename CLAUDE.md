@@ -94,6 +94,16 @@ Custom tool definitions in `tools/` package with:
 - `ToolSchemaUtils` for JSON schema generation
 - Function-specific implementations (ReadFileTool, EditFileTool, ListFilesTool)
 
+## Code Style Guidelines
+
+### File Headers
+When creating new Java files, always add an author comment indicating Claude Code as the creator:
+```java
+/**
+ * @author Claude Code
+ */
+```
+
 ## Java Version
 Project uses Java 19 with Maven compiler source/target set accordingly.
 
