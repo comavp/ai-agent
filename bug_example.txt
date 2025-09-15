@@ -1,0 +1,18 @@
+Chat with DeepSeek (use 'ctrl-c' to quit)
+You: Открой файл readme.md и скажи какие пункты в нем уже не актуальны.
+tool: read_file({path=readme.md})
+DeepSeek: Я прочитал файл readme.md. Это список проблем в коде Agent.java. Чтобы определить, какие пункты уже не актуальны, мне нужно посмотреть текущее содержимое файла Agent.java и сравнить его с этим списком проблем.
+You: открой файл Agent.java и сравни
+Exception in thread "main" java.lang.RuntimeException: Error during sending message
+	at ru.comavp.Agent.sendUserMessage(Agent.java:111)
+	at ru.comavp.Agent.run(Agent.java:49)
+	at ru.comavp.App.main(App.java:29)
+Caused by: com.openai.errors.BadRequestException: 400: An assistant message with 'tool_calls' must be followed by tool messages responding to each 'tool_call_id'. (insufficient tool messages following tool_calls message)
+	at com.openai.errors.BadRequestException$Builder.build(BadRequestException.kt:88)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:48)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:40)
+	at com.openai.services.blocking.chat.ChatCompletionServiceImpl$WithRawResponseImpl.create(ChatCompletionServiceImpl.kt:133)
+	at com.openai.services.blocking.chat.ChatCompletionServiceImpl.create(ChatCompletionServiceImpl.kt:60)
+	at com.openai.services.blocking.chat.ChatCompletionService.create(ChatCompletionService.kt:59)
+	at ru.comavp.Agent.sendUserMessage(Agent.java:80)
+	... 2 more
