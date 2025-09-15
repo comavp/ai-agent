@@ -116,6 +116,8 @@ When creating new Java files, always add an author comment indicating Claude Cod
  */
 ```
 
+**Important**: Only add the `@author` comment when creating new files. When editing existing files, do not add this comment.
+
 ## Git Commit Guidelines
 
 ### Commit Message Format
