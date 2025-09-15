@@ -28,11 +28,10 @@ public class Agent {
 
     private ObjectMapper mapper = new ObjectMapper();
     private ToolManager toolManager;
-    private String lastToolCallId;
 
     public void run() {
         toolManager = new ToolManager(mcpClient);
-        List<ChatCompletionMessage> dialog = new ArrayList<>();
+        List<DialogMessage> dialog = new ArrayList<>();
         System.out.println("Chat with DeepSeek (use 'ctrl-c' to quit)");
         boolean readUserInput = true;
         while (true) {
@@ -44,11 +43,11 @@ public class Agent {
                     break;
                 }
 
-                dialog.add(ChatCompletionMessage.builder()
+                dialog.add(new DialogMessage(ChatCompletionMessage.builder()
                         .content(userInput)
                         .role(JsonValue.from("user"))
                         .refusal("")
-                        .build());
+                        .build()));
             }
 
             ChatCompletion response = sendUserMessage(dialog);
@@ -57,21 +56,22 @@ public class Agent {
                 continue;
             }
             ChatCompletionMessage assistantMessage = response.choices().get(0).message();
-            dialog.add(assistantMessage);
+            dialog.add(new DialogMessage(assistantMessage));
 
             if (assistantMessage.content().isPresent() && StringUtils.isNotEmpty(assistantMessage.content().get())) {
                 System.out.printf("\u001b[93mDeepSeek\u001b[0m: %s%n", assistantMessage.content().get());
                 readUserInput = true;
             } else if (assistantMessage.toolCalls().isPresent()) {
                 readUserInput = false;
-                lastToolCallId = assistantMessage.toolCalls().get().get(0).asFunction().id();
+                String toolCallId = assistantMessage.toolCalls().get().get(0).asFunction().id();
                 ToolResult result = executeTool(assistantMessage.toolCalls().get().get(0).asFunction().function());
                 try {
-                    dialog.add(ChatCompletionMessage.builder()
+                    ChatCompletionMessage toolMessage = ChatCompletionMessage.builder()
                             .role(JsonValue.from("tool"))
                             .content(mapper.writeValueAsString(result))
                             .refusal("")
-                            .build());
+                            .build();
+                    dialog.add(new DialogMessage(toolMessage, toolCallId));
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
@@ -79,7 +79,7 @@ public class Agent {
         }
     }
 
-    private ChatCompletion sendUserMessage(List<ChatCompletionMessage> dialog) {
+    private ChatCompletion sendUserMessage(List<DialogMessage> dialog) {
         try {
             List<ChatCompletionTool> functions = toolManager.getAllChatCompletionTools();
             return client.chat().completions().create(ChatCompletionCreateParams.builder()
@@ -87,25 +87,28 @@ public class Agent {
                     .maxCompletionTokens(1024)
                     .tools(functions)
                     .messages(dialog.stream()
-                            .map(item -> switch (Objects.requireNonNull(item._role().convert(String.class))) {
-                                case "user" ->
-                                        ChatCompletionMessageParam.ofUser(ChatCompletionUserMessageParam.builder()
-                                                .content(item.content().get())
-                                                .build());
-                                case "assistant" -> item.toolCalls()
-                                        .map(toolCalls -> ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
-                                                .content(item.content().get())
-                                                .toolCalls(item.toolCalls().get())
-                                                .build()))
-                                        .orElse(ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
-                                                .content(item.content().get())
-                                                .build()));
-                                case "tool" ->
-                                        ChatCompletionMessageParam.ofTool(ChatCompletionToolMessageParam.builder()
-                                                .content(item.content().get())
-                                                .toolCallId(lastToolCallId)
-                                                .build());
-                                default -> throw new RuntimeException("Unknown user role");
+                            .map(dialogMessage -> {
+                                ChatCompletionMessage item = dialogMessage.getMessage();
+                                return switch (Objects.requireNonNull(item._role().convert(String.class))) {
+                                    case "user" ->
+                                            ChatCompletionMessageParam.ofUser(ChatCompletionUserMessageParam.builder()
+                                                    .content(item.content().get())
+                                                    .build());
+                                    case "assistant" -> item.toolCalls()
+                                            .map(toolCalls -> ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
+                                                    .content(item.content().get())
+                                                    .toolCalls(item.toolCalls().get())
+                                                    .build()))
+                                            .orElse(ChatCompletionMessageParam.ofAssistant(ChatCompletionAssistantMessageParam.builder()
+                                                    .content(item.content().get())
+                                                    .build()));
+                                    case "tool" ->
+                                            ChatCompletionMessageParam.ofTool(ChatCompletionToolMessageParam.builder()
+                                                    .content(item.content().get())
+                                                    .toolCallId(dialogMessage.getToolCallId())
+                                                    .build());
+                                    default -> throw new RuntimeException("Unknown user role");
+                                };
                             })
                             .toList())
                     .build());
