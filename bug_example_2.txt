@@ -1,0 +1,20 @@
+Chat with DeepSeek (use 'ctrl-c' to quit)
+You: открой файл application.properties
+tool: read_file({path=application.properties})
+DeepSeek: Файл `application.properties` не найден в текущей директории. Давайте посмотрим, какие файлы есть в текущей директории:
+You: покажи мне список файлов
+Exception in thread "main" java.lang.RuntimeException: Error during sending message
+	at ru.comavp.Agent.sendUserMessage(Agent.java:109)
+	at ru.comavp.Agent.run(Agent.java:49)
+	at ru.comavp.App.main(App.java:29)
+Caused by: com.openai.errors.BadRequestException: 400: An assistant message with 'tool_calls' must be followed by tool messages responding to each 'tool_call_id'. (insufficient tool messages following tool_calls message)
+	at com.openai.errors.BadRequestException$Builder.build(BadRequestException.kt:88)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:48)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:40)
+	at com.openai.services.blocking.chat.ChatCompletionServiceImpl$WithRawResponseImpl.create(ChatCompletionServiceImpl.kt:133)
+	at com.openai.services.blocking.chat.ChatCompletionServiceImpl.create(ChatCompletionServiceImpl.kt:60)
+	at com.openai.services.blocking.chat.ChatCompletionService.create(ChatCompletionService.kt:59)
+	at ru.comavp.Agent.sendUserMessage(Agent.java:80)
+	... 2 more
+
+Process finished with exit code 1

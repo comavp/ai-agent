@@ -1,0 +1,61 @@
+Chat with DeepSeek (use 'ctrl-c' to quit)
+You: какие файлы у меня есть?
+tool: list_files({})
+DeepSeek: У вас есть следующие файлы и директории:
+
+**Корневые файлы:**
+- `pom.xml` - Maven конфигурационный файл
+- `readme.md` - файл документации
+
+**Директории:**
+- `src/` - исходный код
+- `target/` - скомпилированные файлы и артефакты сборки
+
+**Структура исходного кода (src/):**
+- `src/main/java/ru/comavp/` - основной Java код пакета
+- `src/main/resources/` - ресурсы приложения
+- `src/test/java/` - тестовый код
+
+**Основные Java файлы:**
+- `Agent.java` - основной агент
+- `App.java` - главное приложение
+- `DeepseekProperties.java` - свойства для Deepseek
+- `McpClientRunner.java` и другие MCP-связанные файлы
+- Различные инструменты (tools) для работы с файлами
+
+**Ресурсы:**
+- `application.properties` - файл конфигурации
+
+Это выглядит как Java проект Maven с реализацией Model Context Protocol (MCP) клиента и различных инструментов для работы с файловой системой.
+You: открой readme.md
+tool: read_file({path=readme.md})
+DeepSeek: Файл `readme.md` содержит список проблем в коде файла `Agent.java`. Вот основные проблемы, которые были выявлены:
+
+## Проблемы в коде Agent.java
+
+1. **Неправильное название в выводе** - "GigaChat" вместо "Deepseek"
+2. **Необработанный случай множественных tool calls** - берется только первый вызов инструмента
+3. **Дублирование кода в switch-case** - два раза обрабатывается assistant
+4. **Потенциальная NPE** - при вызовах `item._role()` или `item.content()`
+5. **Неправильная обработка tool call ID** - в tool сообщениях
+6. **Необработанные исключения JsonProcessingException**
+7. **Жестко закодированные строки** вместо констант
+8. **Неоптимальное использование Stream API**
+9. **Отсутствие логирования ошибок**
+10. **Проблемы с локализацией** - смесь русского и английского языков
+
+Похоже, это список проблем для исправления в коде. Давайте посмотрим на сам файл `Agent.java`, чтобы понять текущую реализацию.
+You: Отправь этот текст на почту
+Exception in thread "main" java.lang.RuntimeException: Error during sending message
+	at ru.comavp.Agent.sendUserMessage(Agent.java:133)
+	at ru.comavp.Agent.run(Agent.java:60)
+	at ru.comavp.App.main(App.java:32)
+Caused by: com.openai.errors.BadRequestException: 400: An assistant message with 'tool_calls' must be followed by tool messages responding to each 'tool_call_id'. (insufficient tool messages following tool_calls message)
+	at com.openai.errors.BadRequestException$Builder.build(BadRequestException.kt:88)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:48)
+	at com.openai.core.handlers.ErrorHandler$errorHandler$1.handle(ErrorHandler.kt:40)
+	at com.openai.services.blocking.chat.ChatCompletionServiceImpl$WithRawResponseImpl.create(ChatCompletionServiceImpl.kt:133)
+	at com.openai.services.blocking.chat.ChatCompletionServiceImpl.create(ChatCompletionServiceImpl.kt:60)
+	at com.openai.services.blocking.chat.ChatCompletionService.create(ChatCompletionService.kt:59)
+	at ru.comavp.Agent.sendUserMessage(Agent.java:105)
+	... 2 more

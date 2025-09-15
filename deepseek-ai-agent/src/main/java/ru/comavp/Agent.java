@@ -28,6 +28,7 @@ public class Agent {
 
     private ObjectMapper mapper = new ObjectMapper();
     private ToolManager toolManager;
+    private String lastToolCallId;
 
     public void run() {
         toolManager = new ToolManager(mcpClient);
@@ -63,13 +64,13 @@ public class Agent {
                 readUserInput = true;
             } else if (assistantMessage.toolCalls().isPresent()) {
                 readUserInput = false;
+                lastToolCallId = assistantMessage.toolCalls().get().get(0).asFunction().id();
                 ToolResult result = executeTool(assistantMessage.toolCalls().get().get(0).asFunction().function());
                 try {
                     dialog.add(ChatCompletionMessage.builder()
                             .role(JsonValue.from("tool"))
                             .content(mapper.writeValueAsString(result))
                             .refusal("")
-                            .toolCalls(assistantMessage.toolCalls().get())
                             .build());
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
@@ -102,7 +103,7 @@ public class Agent {
                                 case "tool" ->
                                         ChatCompletionMessageParam.ofTool(ChatCompletionToolMessageParam.builder()
                                                 .content(item.content().get())
-                                                .toolCallId(item.toolCalls().get().get(0).asFunction().id())
+                                                .toolCallId(lastToolCallId)
                                                 .build());
                                 default -> throw new RuntimeException("Unknown user role");
                             })
